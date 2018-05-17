@@ -56,14 +56,6 @@ class ApiClientProvider implements UserProvider
         rr($credentials);
     }
 
-
-    @todo créer table pour les api keys avec :
-    - un uuid : la clé elle-même
-    - un user_id pour trouver les feeditems appartenant à l'user
-    - une liste de droits dans un simple champ texte, virgules sep' :
-      read:*,push:articles,read:notifs,push:*
-
-
     /**
      * Validate a user against the given credentials.
      *
