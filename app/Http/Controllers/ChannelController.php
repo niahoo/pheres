@@ -17,7 +17,7 @@ class ChannelController extends Controller
             $this->authorizationFail($gateName);
         }
         $feed = \App::make('feed');
-        $items = $channel->queryAll()
+        $items = $channel->queryForUser(\Auth::user()->user)
             ->orderBy('created_at', 'asc')
             ->get()
             ;

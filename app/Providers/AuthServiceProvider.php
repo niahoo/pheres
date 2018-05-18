@@ -44,7 +44,6 @@ class AuthServiceProvider extends ServiceProvider
             return $ch->allowsClientToPush($cli);
         });
         Gate::define('channel-read', function(ApiClient $cli, FeedChannel $ch) {
-            rr($cli->authorizations);
             return $ch->allowsClientToRead($cli);
         });
     }

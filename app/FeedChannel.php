@@ -40,6 +40,7 @@ class FeedChannel {
         return \DB
             ::table(self::ITEMS_TABLE)
             ->where('channel', $this->name)
+            ->where($user->feedItems()->getForeignKeyName(), $user->getKey())
             ;
     }
 

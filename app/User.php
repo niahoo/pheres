@@ -38,4 +38,9 @@ class User extends Authenticatable
         $client = new ApiClient($attributes);
         return $this->apiClients()->save($client);
     }
+
+    public function feedItems()
+    {
+        return $this->hasMany(FeedItem::class);
+    }
 }

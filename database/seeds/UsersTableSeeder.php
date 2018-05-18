@@ -5,8 +5,6 @@ use App\User;
 use App\ApiClient;
 use App\FeedChannel;
 
-const MAIN_TEST_ACCOUNT_EMAIL = 'test@test.com';
-
 class UsersTableSeeder extends Seeder
 {
     /**
@@ -16,21 +14,50 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        $this->createTester1();
+        $this->createTester2();
+    }
 
+    public function createTester1()
+    {
         $tester = (new User([
-            'name' => 'test',
-            'email' => 'test@test.com',
+            'name' => 'Tester 1',
+            'email' => 'test1@localhost',
             'password' => bcrypt('test'),
         ]));
         $tester->save();
-        $readUUID = '96262b26-28f4-4448-962b-d9fd10b18344';
+        $readUUID = '11111111-read-4448-962b-d9fd10b18344';
         $tester->createApiClient([
             'api_key' => $readUUID,
             'authorizations' => [
                 FeedChannel::aclTopic('*', FeedChannel::ACL_LEVEL_READ),
             ]
         ]);
-        $writeUUID = '117b48e8-eed5-44af-b0f9-8e2091362f1d';
+        $writeUUID = '11111111-push-44af-b0f9-8e2091362f1d';
+        $tester->createApiClient([
+            'api_key' => $writeUUID,
+            'authorizations' => [
+                FeedChannel::aclTopic('*', FeedChannel::ACL_LEVEL_PUSH),
+            ],
+        ]);
+    }
+
+    public function createTester2()
+    {
+        $tester = (new User([
+            'name' => 'Tester 2',
+            'email' => 'test2@localhost',
+            'password' => bcrypt('test'),
+        ]));
+        $tester->save();
+        $readUUID = '22222222-read-4448-962b-d9fd10b18344';
+        $tester->createApiClient([
+            'api_key' => $readUUID,
+            'authorizations' => [
+                FeedChannel::aclTopic('*', FeedChannel::ACL_LEVEL_READ),
+            ]
+        ]);
+        $writeUUID = '22222222-push-44af-b0f9-8e2091362f1d';
         $tester->createApiClient([
             'api_key' => $writeUUID,
             'authorizations' => [
