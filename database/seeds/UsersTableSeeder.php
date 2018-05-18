@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\User;
 use App\ApiClient;
+use App\FeedChannel;
 
 const MAIN_TEST_ACCOUNT_EMAIL = 'test@test.com';
 
@@ -16,23 +17,25 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
 
-        $tester = (new App\User([
+        $tester = (new User([
             'name' => 'test',
             'email' => 'test@test.com',
             'password' => bcrypt('test'),
         ]));
         $tester->save();
-        $writeUUID = '117b48e8-eed5-44af-b0f9-8e2091362f1d';
         $readUUID = '96262b26-28f4-4448-962b-d9fd10b18344';
-        $readonly = new ApiClient([
+        $tester->createApiClient([
             'api_key' => $readUUID,
-            'authorizations' => ['read-channel'],
+            'authorizations' => [
+                FeedChannel::aclTopic('*', FeedChannel::ACL_LEVEL_READ),
+            ]
         ]);
-        $writer = new ApiClient([
+        $writeUUID = '117b48e8-eed5-44af-b0f9-8e2091362f1d';
+        $tester->createApiClient([
             'api_key' => $writeUUID,
-            'authorizations' => ['read-channel', 'write-channel'],
+            'authorizations' => [
+                FeedChannel::aclTopic('*', FeedChannel::ACL_LEVEL_PUSH),
+            ],
         ]);
-        $tester->apiClients()->save($readonly);
-        $tester->apiClients()->save($writer);
     }
 }

@@ -8,6 +8,8 @@ class FeedChannel {
     const SCOPE_PRIVATE = 1;
     const SCOPE_GLOBAL = 2;
     const ITEMS_TABLE = 'feeditems';
+    const ACL_LEVEL_READ = 'read';
+    const ACL_LEVEL_PUSH = 'push';
 
     protected $name;
 
@@ -33,19 +35,38 @@ class FeedChannel {
             ;
     }
 
-    public function push($data, ApiClient $client) {
-        $item = new FeedItem($data);
+    public function queryForUser(User $user) {
+        // return the raw query for extension, not the records
+        return \DB
+            ::table(self::ITEMS_TABLE)
+            ->where('channel', $this->name)
+            ;
+    }
+
+    public function push(FeedItem $item) {
         $item->channel = $this->name;
-        $authorizationTopic = 'write-channel';
-        if ($client->isAuthorized($authorizationTopic)) {
-            $item->apiClient()->associate($client);
-            $item->user()->associate($client->user);
-            $pushed = $item->save();
-            return $pushed;
-        } else {
-            throw new \Illuminate\Auth\Access\AuthorizationException(
-                'Unauthorized: ' . $authorizationTopic
-            );
-        }
+        $pushed = $item->save();
+        return $pushed;
+    }
+
+    public function allowsClientTo(ApiClient $client, $level = 'read')
+    {
+        return $client->isAuthorized(static::aclTopic('*', $level))
+            || $client->isAuthorized(static::aclTopic($this->name, $level));
+    }
+
+    public function allowsClientToRead(ApiClient $client)
+    {
+        return static::allowsClientTo($client, 'read');
+    }
+
+    public function allowsClientToPush(ApiClient $client)
+    {
+        return static::allowsClientTo($client, 'push');
+    }
+
+    public static function aclTopic(string $channelName, $accessLevel)
+    {
+        return "channel:$channelName:$accessLevel";
     }
 }

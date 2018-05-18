@@ -32,4 +32,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(ApiClient::class);
     }
+
+    public function createApiClient($attributes)
+    {
+        $client = new ApiClient($attributes);
+        return $this->apiClients()->save($client);
+    }
 }
