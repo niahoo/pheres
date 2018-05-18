@@ -2,10 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class ApiClient extends Model
+class ApiClient extends Authenticatable
 {
     protected $casts = [
         'authorizations' => 'array'
@@ -16,12 +15,4 @@ class ApiClient extends Model
         return $this->belongsTo(User::class);
     }
 
-    public static function generate(array $authorizations)
-    {
-        $uuid = Str::uuid();
-        return new static([
-            'id' => $uuid,
-            'authorizations' => $authorizations,
-        ]);
-    }
 }

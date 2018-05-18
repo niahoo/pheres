@@ -17,10 +17,11 @@ Route::middleware('auth:api')->group(function(){
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    Route::get('/{channel}/{feed_format}', 'ChannelController@list');
-    Route::get('/{channel}/item/{id}', 'ChannelController@single')
+    // /p/ : private channels
+    Route::get('/p/{channel}/{feed_format}', 'ChannelController@list');
+    Route::get('/p/{channel}/item/{id}', 'ChannelController@single')
         ->name('singleItem');
-    Route::post('/{channel}', 'ChannelController@push');
+    Route::post('/p/{channel}', 'ChannelController@push');
 });
 
 // Channel param is casted in the routeserviceprovider and regex-validated

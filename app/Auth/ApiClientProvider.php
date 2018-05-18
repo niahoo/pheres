@@ -2,6 +2,7 @@
 namespace App\Auth;
 
 use Exception;
+use App\ApiClient;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
@@ -53,7 +54,7 @@ class ApiClientProvider implements UserProvider
         if (!$isApiAuth) {
             throw new Exception("bad api credentials");
         }
-        rr($credentials);
+        return ApiClient::find($credentials['api_token']);
     }
 
     /**
