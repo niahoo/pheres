@@ -54,7 +54,7 @@ class ApiClientProvider implements UserProvider
         if (!$isApiAuth) {
             throw new Exception("bad api credentials");
         }
-        return ApiClient::find($credentials['api_token']);
+        return ApiClient::where('api_key', $credentials['api_token'])->first();
     }
 
     /**

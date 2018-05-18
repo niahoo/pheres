@@ -25,11 +25,11 @@ class UsersTableSeeder extends Seeder
         $writeUUID = '117b48e8-eed5-44af-b0f9-8e2091362f1d';
         $readUUID = '96262b26-28f4-4448-962b-d9fd10b18344';
         $readonly = new ApiClient([
-            'id' => $readUUID,
+            'api_key' => $readUUID,
             'authorizations' => ['read-channel'],
         ]);
         $writer = new ApiClient([
-            'id' => $writeUUID,
+            'api_key' => $writeUUID,
             'authorizations' => ['read-channel', 'write-channel'],
         ]);
         $tester->apiClients()->save($readonly);

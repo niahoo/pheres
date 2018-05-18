@@ -18,7 +18,18 @@ class CreateFeeditemsTable extends Migration
             $table->string('channel');
             $table->string('title');
             $table->text('description');
+            // - We will store the api_key id of the creator of the item, so we
+            //   can know which client has created an item.
+            // - This can allow us to retrieve the user id, but we directly
+            //   store the user id so it is faster to retrieve which items send
+            //   to a client
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('api_client_id');
             $table->timestamps();
+
+            $table->foreign('api_client_id')->references('id')->on('api_clients');
+            $table->foreign('user_id')->references('id')->on('users');
+
         });
     }
 

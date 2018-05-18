@@ -38,9 +38,10 @@ class ChannelController extends Controller
         $validated = $req->validate([
             'title' => 'required|max:255',
             'description' => 'required|max:4095',
+            'link' => 'url',
         ]);
         // Framework will stop here in case of error
-        $channel->push($validated);
+        $channel->push($validated, \Auth::user());
         return 'ok';
     }
 }

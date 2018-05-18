@@ -33,9 +33,11 @@ class FeedChannel {
             ;
     }
 
-    public function push($data) {
+    public function push($data, ApiClient $client) {
         $item = new FeedItem($data);
         $item->channel = $this->name;
+        $item->apiClient()->associate($client);
+        $item->user()->associate($client->user);
         $pushed = $item->save();
         return $pushed;
     }
