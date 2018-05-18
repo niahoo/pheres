@@ -36,9 +36,16 @@ class FeedChannel {
     public function push($data, ApiClient $client) {
         $item = new FeedItem($data);
         $item->channel = $this->name;
-        $item->apiClient()->associate($client);
-        $item->user()->associate($client->user);
-        $pushed = $item->save();
-        return $pushed;
+        $authorizationTopic = 'write-channel';
+        if ($client->isAuthorized($authorizationTopic)) {
+            $item->apiClient()->associate($client);
+            $item->user()->associate($client->user);
+            $pushed = $item->save();
+            return $pushed;
+        } else {
+            throw new \Illuminate\Auth\Access\AuthorizationException(
+                'Unauthorized: ' . $authorizationTopic
+            );
+        }
     }
 }

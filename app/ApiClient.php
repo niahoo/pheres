@@ -15,4 +15,9 @@ class ApiClient extends Authenticatable
         return $this->belongsTo(User::class);
     }
 
+    public function isAuthorized($topic)
+    {
+        return in_array($topic, $this->authorizations);
+    }
+
 }
