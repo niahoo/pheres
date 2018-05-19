@@ -10,6 +10,11 @@ class ApiClient extends Authenticatable
         'authorizations' => 'array'
     ];
 
+    protected $fillable = [
+        'api_key',
+        'authorizations',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

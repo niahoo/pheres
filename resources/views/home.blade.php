@@ -32,8 +32,10 @@
                 <div class="card-header">Api clients</div>
 
                 <div class="card-body">
+                    <a href="/clients/add" class="btn btn-primary">Add client</a>
                     @foreach ($apiClients as $apiClient)
-                        <form class="form" method="POST" action="/client/{{ $apiClient->id }}/update">
+                        <hr/>
+                        <form class="form" method="POST" action="/clients/{{ $apiClient->id }}/update">
                             @csrf
                             <h3>{{ $apiClient->api_key }}</h3>
 
@@ -63,7 +65,6 @@
                             <button type="submit" name="update_client" value="update"
                                 class="btn btn-primary">Save</button>
                         </form>
-                        <hr>
                     @endforeach
                 </div>
             </div>

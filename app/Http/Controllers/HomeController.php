@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\FeedChannel;
 
 class HomeController extends Controller
@@ -24,8 +25,23 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $apiClients = \Auth::user()->apiClients;
+        $apiClients = \Auth::user()
+            ->apiClients()
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ;
         return view('home', compact('apiClients'));
+    }
+
+    public function createClient()
+    {
+        $client = \Auth::user()->createApiClient([
+            'api_key' => Str::uuid()->toString(),
+            'authorizations' => [
+                FeedChannel::aclTopic('*', FeedChannel::ACL_LEVEL_READ),
+            ]
+        ]);
+        return redirect()->route('home')->with('status', 'Client added');
     }
 
     public function updateClient($clientId, Request $req)
@@ -48,18 +64,12 @@ class HomeController extends Controller
             return redirect()->route('home')->with('errmsg', 'Unknown action');
         }
         // Updating
-
-        false &&
-        rr($req->input(), [
-            $req->input('channel_push'),
-            $req->input('channel_read'),
-            $req->input('update_client'),
-            $req->input('delete_client'),
-        ]);
         $readTopic = FeedChannel::aclTopic('*', FeedChannel::ACL_LEVEL_READ);
+        $client->toggleAuthorization($readTopic, $req->input('channel_read') === 'on');
+
         $pushTopic = FeedChannel::aclTopic('*', FeedChannel::ACL_LEVEL_PUSH);
         $client->toggleAuthorization($pushTopic, $req->input('channel_push') === 'on');
-        $client->toggleAuthorization($readTopic, $req->input('channel_read') === 'on');
+
         $client->save();
         return redirect()->route('home')->with('status', 'Updated');
     }
