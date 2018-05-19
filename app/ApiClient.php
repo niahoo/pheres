@@ -20,4 +20,15 @@ class ApiClient extends Authenticatable
         return in_array($topic, $this->authorizations);
     }
 
+    public function toggleAuthorization(string $topic, bool $isAuthorized)
+    {
+        $authzs = array_filter($this->authorizations, function($v) use ($topic) {
+            return $v !== $topic;
+        });
+        if ($isAuthorized) {
+            $authzs[] = $topic;
+        }
+        $this->authorizations = $authzs;
+    }
+
 }
