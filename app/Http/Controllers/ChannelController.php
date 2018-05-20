@@ -29,7 +29,7 @@ class ChannelController extends Controller
         $feed->setShortening(false);
         $feed->setTextLimit(4095);
         foreach ($items as $item) {
-            $itemLink = route('singleItem', [
+            $itemLink = $item->link ?? route('singleItem', [
                 'channel' => $channel->getName(),
                 'id' => $item->id,
             ]);
@@ -37,7 +37,8 @@ class ChannelController extends Controller
                 $item->title, null,
                 $itemLink,
                 $item->created_at,
-                $item->description
+                $item->description,
+                $item->content
             );
         }
         return $feed->render($format, -1);
@@ -46,7 +47,8 @@ class ChannelController extends Controller
     public function push(Request $req, $channel) {
         $validatedData = $req->validate([
             'title' => 'required|max:255',
-            'description' => 'required|max:4095',
+            'description' => 'max:191',
+            'content' => 'required|max:4095',
             'link' => 'url',
         ]);
         $gateName = 'channel-push';
@@ -56,11 +58,19 @@ class ChannelController extends Controller
             $item->apiClient()->associate($client);
             $item->user()->associate($client->user);
             $channel->push($item, \Auth::user());
-            return 'ok';
+            return 'ok '.$item->id;
         } else {
             $this->authorizationFail($gateName);
         }
         // Framework will stop here in case of error
+    }
+
+    public function single($channel, $id)
+    {
+        return $channel
+            ->itemQuery(\Auth::user(), $id)
+            ->firstOrFail()
+            ;
     }
 
     public static function authorizationFail($gateName)

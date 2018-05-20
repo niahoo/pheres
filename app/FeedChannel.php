@@ -44,6 +44,14 @@ class FeedChannel {
             ;
     }
 
+    public function itemQuery(User $user, $itemId) {
+        // return the raw query for extension, not the records
+        return FeedItem::whereKey($itemId)
+            ->where('channel', $this->name)
+            ->where($user->feedItems()->getForeignKeyName(), $user->getKey())
+            ;
+    }
+
     public function push(FeedItem $item) {
         $item->channel = $this->name;
         $pushed = $item->save();

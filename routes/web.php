@@ -20,3 +20,5 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/clients/{apiClientId}/update', 'HomeController@updateClient');
 Route::get('/clients/add', 'HomeController@createClient');
+Route::get('/p/{channel}/item/{id}', 'ChannelController@single')
+        ->name('singleItem');

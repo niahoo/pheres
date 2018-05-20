@@ -19,8 +19,6 @@ Route::middleware('auth:api')->group(function(){
     });
     // /p/ : private channels
     Route::get('/p/{channel}/{feed_format?}', 'ChannelController@list');
-    Route::get('/p/{channel}/item/{id}', 'ChannelController@single')
-        ->name('singleItem');
     Route::post('/p/{channel}', 'ChannelController@push');
 });
 

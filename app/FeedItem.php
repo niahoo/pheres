@@ -8,7 +8,7 @@ class FeedItem extends Model
 {
     protected $table = 'feeditems';
 
-    protected $fillable = ['title', 'description'];
+    protected $fillable = ['title', 'description', 'content', 'link'];
 
     public function user()
     {
