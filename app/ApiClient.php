@@ -12,6 +12,7 @@ class ApiClient extends Authenticatable
 
     protected $fillable = [
         'api_key',
+        'name',
         'authorizations',
     ];
 

@@ -29,6 +29,7 @@ class UsersTableSeeder extends Seeder
         $readUUID = '11111111-read-4448-962b-d9fd10b18344';
         $tester->createApiClient([
             'api_key' => $readUUID,
+            'name' => 'My readonly client',
             'authorizations' => [
                 FeedChannel::aclTopic('*', FeedChannel::ACL_LEVEL_READ),
             ]
@@ -36,6 +37,7 @@ class UsersTableSeeder extends Seeder
         $writeUUID = '11111111-push-44af-b0f9-8e2091362f1d';
         $tester->createApiClient([
             'api_key' => $writeUUID,
+            'name' => 'My writeonly client',
             'authorizations' => [
                 FeedChannel::aclTopic('*', FeedChannel::ACL_LEVEL_PUSH),
             ],
@@ -53,6 +55,7 @@ class UsersTableSeeder extends Seeder
         $readUUID = '22222222-read-4448-962b-d9fd10b18344';
         $tester->createApiClient([
             'api_key' => $readUUID,
+            'name' => 'My readonly client',
             'authorizations' => [
                 FeedChannel::aclTopic('*', FeedChannel::ACL_LEVEL_READ),
             ]
@@ -60,6 +63,7 @@ class UsersTableSeeder extends Seeder
         $writeUUID = '22222222-push-44af-b0f9-8e2091362f1d';
         $tester->createApiClient([
             'api_key' => $writeUUID,
+            'name' => 'My writeonly client',
             'authorizations' => [
                 FeedChannel::aclTopic('*', FeedChannel::ACL_LEVEL_PUSH),
             ],

@@ -15,6 +15,7 @@ class CreateApiClientsTable extends Migration
     {
         Schema::create('api_clients', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
             $table->uuid('api_key')->unique();
             $table->unsignedInteger('user_id');
             $table->text('authorizations');

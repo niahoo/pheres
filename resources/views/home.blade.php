@@ -37,8 +37,11 @@
                         <hr/>
                         <form class="form" method="POST" action="/clients/{{ $apiClient->id }}/update">
                             @csrf
-                            <h3>{{ $apiClient->api_key }}</h3>
+                            <h3>{{ $apiClient->name }}</h3>
 
+                            <div class="form-group">
+                                <input type="text" readonly size="36" value="{{ $apiClient->api_key }}" />
+                            </div>
                             <div class="form-check">
                               <input class="form-check-input" name="channel_read" type="checkbox" value="on" id="ckb_channel_read"
                               @if($apiClient->isAuthorized(App\FeedChannel::aclTopic('*', App\FeedChannel::ACL_LEVEL_READ)))
