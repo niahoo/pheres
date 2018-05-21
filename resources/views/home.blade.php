@@ -29,6 +29,28 @@
             @endif
 
             <div class="card">
+                <div class="card-header">Channels</div>
+
+                <div class="card-body">
+                    @if(count($usedChannels))
+                        <ul>
+                        @foreach ($usedChannels as $chanName)
+                            <li>
+                                <a href="{{ route('channelIndex', $chanName) }}">
+                                    <code>{{ $chanName }}</code>
+                                </a>
+                            </li>
+                        @endforeach
+                        </ul>
+                    @else
+                        <p>No channels used</p>
+                    @endif
+                </div>
+            </div>
+
+            <br/>
+
+            <div class="card">
                 <div class="card-header">Api clients</div>
 
                 <div class="card-body">

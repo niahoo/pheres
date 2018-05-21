@@ -25,12 +25,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $apiClients = \Auth::user()
+        $user = \Auth::user();
+        $apiClients = $user
             ->apiClients()
             ->orderBy('created_at', 'desc')
             ->get()
             ;
-        return view('home', compact('apiClients'));
+        $usedChannels = FeedChannel::userCurrentChannels($user);
+        return view('home', compact('apiClients', 'usedChannels'));
     }
 
     public function createClient()

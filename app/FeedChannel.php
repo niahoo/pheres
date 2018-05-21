@@ -13,7 +13,8 @@ class FeedChannel {
 
     protected $name;
 
-    public function __construct($spec) {
+    public function __construct($spec)
+    {
         $re = '@' . self::SPEC_STRING_RE . '@';
         $match = preg_match($re, $spec, $m);
         if (!$match) {
@@ -23,28 +24,35 @@ class FeedChannel {
         $this->name = $name;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function queryAll() {
+    public function userItemsQuery(User $user)
+    {
         // return the raw query for extension, not the records
-        return \DB
-            ::table(self::ITEMS_TABLE)
-            ->where('channel', $this->name)
-            ;
-    }
-
-    public function queryForUser(User $user) {
-        // return the raw query for extension, not the records
-        return \DB
-            ::table(self::ITEMS_TABLE)
+        return \DB::table(self::ITEMS_TABLE)
             ->where('channel', $this->name)
             ->where($user->feedItems()->getForeignKeyName(), $user->getKey())
             ;
     }
 
-    public function itemQuery(User $user, $itemId) {
+    public static function userCurrentChannels(User $user)
+    {
+        // return the raw query for extension, not the records
+        return \DB::table(self::ITEMS_TABLE)
+            ->select('channel')
+            ->groupBy('channel')
+            ->where($user->feedItems()->getForeignKeyName(), $user->getKey())
+            ->get()
+            ->pluck('channel')
+            ->toArray()
+            ;
+    }
+
+    public function itemQuery(User $user, $itemId)
+    {
         // return the raw query for extension, not the records
         return FeedItem::whereKey($itemId)
             ->where('channel', $this->name)
@@ -52,7 +60,8 @@ class FeedChannel {
             ;
     }
 
-    public function push(FeedItem $item) {
+    public function push(FeedItem $item)
+    {
         $item->channel = $this->name;
         $pushed = $item->save();
         return $pushed;

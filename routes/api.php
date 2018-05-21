@@ -18,8 +18,8 @@ Route::middleware('auth:api')->group(function(){
         return $request->user();
     });
     // /p/ : private channels
-    Route::get('/p/{channel}/{feed_format?}', 'ChannelController@list');
-    Route::post('/p/{channel}', 'ChannelController@push');
+    Route::get('/p/{channel}/{feed_format?}', 'ApiChannelController@list');
+    Route::post('/p/{channel}', 'ApiChannelController@push');
 });
 
 // Channel param is casted in the routeserviceprovider and regex-validated
