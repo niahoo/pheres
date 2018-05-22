@@ -38,6 +38,7 @@ class HomeController extends Controller
     public function createClient()
     {
         $client = \Auth::user()->createApiClient([
+            'name' => 'Unnamed client',
             'api_key' => Str::uuid()->toString(),
             'authorizations' => [
                 FeedChannel::aclTopic('*', FeedChannel::ACL_LEVEL_READ),

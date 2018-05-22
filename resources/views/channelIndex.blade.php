@@ -31,25 +31,31 @@
             <div class="card">
                 <div class="card-header">Bokmarklet</div>
                 <div class="card-body">
-<pre>
+                <div id="bookmarklet-app"></div>
+                <script src="{{ asset('js/domvm/dist/dev/domvm.dev.js') }}" defer></script>
+                <script defer>
+                    var bookmarkletAppData = {!! json_encode($bookmarkletWidgetData) !!};
+                </script>
+                <script src="{{ asset('js/bookmarklet-app.js') }}" defer></script>
 
-                    @todo
-                        - List all api clients that can push to this channel
-                        - Show a warning that if the api client is modified
-                          (loses the right to push to the channel, the
-                          bookmarklet will not work no more).
-                        - Pré sélectionner le premier api client de la liste.
-                          Par défaut, le premier est celui qui n'a pas le droit
-                          en lecture, s'il existe.
-                        - Proposer de sélectionner un autre api client si
-                          disponible.
-                        - Si aucun client existe, afficher une erreur et
-                          indiquer qu'il faut en créer un, avec un lien vers le
-                          dashboard.
-                        - Afficher un texte indiquant comment glisser le
-                          bookmarklet.
-                        - à l'initialisation et lors du clic sur un api client,
-                          render() le bookmarklet.
+<pre>
+@todo
+- List all api clients that can push to this channel
+- Show a warning that if the api client is modified
+  (loses the right to push to the channel, the
+  bookmarklet will not work no more).
+- Pré sélectionner le premier api client de la liste.
+  Par défaut, le premier est celui qui n'a pas le droit
+  en lecture, s'il existe.
+- Proposer de sélectionner un autre api client si
+  disponible.
+- Si aucun client existe, afficher une erreur et
+  indiquer qu'il faut en créer un, avec un lien vers le
+  dashboard.
+- Afficher un texte indiquant comment glisser le
+  bookmarklet.
+- à l'initialisation et lors du clic sur un api client,
+  render() le bookmarklet.
 
 </pre>
                 </div>
