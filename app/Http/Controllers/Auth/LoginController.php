@@ -34,6 +34,19 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        $this->middleware('guest')
+            ->except('logout')
+            ->except('loginChekTxt')
+            ;
+    }
+
+    public function loginChekTxt()
+    {
+        $resp = \Auth::user() ? 'true' : 'false';
+        return response($resp)
+            ->header('Access-Control-Allow-Origin', $_SERVER['HTTP_ORIGIN'] ?? '*')
+            ->header('Access-Control-Allow-Credentials', 'true')
+            ;
+
     }
 }

@@ -26,7 +26,7 @@ class CreateFeeditemsTable extends Migration
             //   store the user id so it is faster to retrieve which items send
             //   to a client
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('api_client_id');
+            $table->unsignedInteger('api_client_id')->nullable();
             $table->timestamps();
 
             $table->foreign('api_client_id')->references('id')->on('api_clients');

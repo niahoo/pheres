@@ -3,7 +3,8 @@
 namespace App\Providers;
 
 use Auth;
-use App\ApiClient;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\User;
 use App\FeedChannel;
 use App\Auth\ApiClientProvider;
 use Illuminate\Support\Facades\Gate;
@@ -40,10 +41,16 @@ class AuthServiceProvider extends ServiceProvider
             return new ApiClientProvider();
         });
 
-        Gate::define('channel-push', function(ApiClient $cli, FeedChannel $ch) {
+        Gate::define('channel-push', function(Authenticatable $cli, FeedChannel $ch) {
+            if ($cli instanceof User) {
+                return true; // user can do anything on its channel
+            }
             return $ch->allowsClientToPush($cli);
         });
-        Gate::define('channel-read', function(ApiClient $cli, FeedChannel $ch) {
+        Gate::define('channel-read', function(Authenticatable $cli, FeedChannel $ch) {
+            if ($cli instanceof User) {
+                return true; // user can do anything on its channel
+            }
             return $ch->allowsClientToRead($cli);
         });
     }

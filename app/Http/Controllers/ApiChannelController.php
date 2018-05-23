@@ -6,16 +6,21 @@ use Illuminate\Http\Request;
 use Gate;
 use App\FeedItem;
 
-class ChannelController extends Controller
+class ApiChannelController extends Controller
 {
 
     const DEFAULT_OUTPUT_FORMAT = 'rss';
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
 
     public function list($channel, $format = self::DEFAULT_OUTPUT_FORMAT)
     {
         $gateName = 'channel-read';
         if (!Gate::allows($gateName, $channel)) {
-            $this->authorizationFail($gateName);
+            return $this->authorizationFail($gateName);
         }
         $feed = \App::make('feed');
         $items = $channel->userItemsQuery(\Auth::user()->user)
@@ -47,31 +52,20 @@ class ChannelController extends Controller
 
     public function push(Request $req, $channel)
     {
-        $validatedData = $req->validate([
-            'title' => 'required|max:255',
-            'description' => 'max:191',
-            'content' => 'required|max:4095',
-            'link' => 'url',
-        ]);
         $gateName = 'channel-push';
         if (Gate::allows($gateName, $channel)) {
-            $client = \Auth::user();
-            $item = new FeedItem($validatedData);
-            $item->apiClient()->associate($client);
-            $item->user()->associate($client->user);
-            $channel->push($item, \Auth::user());
-            return 'ok '.$item->id;
+            $item = FeedItem::fromExt($req->all())->setOwner(\Auth::user());
+            $item = $channel->push($item);
+            $resp = response('ok '.$item->id, 201);
         } else {
-            $this->authorizationFail($gateName);
+            $resp =$this->authorizationFail($gateName);
         }
+        return $resp->header('Content-Type', 'text/plain');
         // Framework will stop here in case of error
     }
 
     public static function authorizationFail($gateName)
     {
-        throw new \Illuminate\Auth\Access\AuthorizationException(
-            'Unauthorized: ' . $gateName
-        );
-        die(1);
+        return response("Unauthorized: $gateName", 403);
     }
 }

@@ -2,6 +2,10 @@
 
 namespace App;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\User;
+use App\ApiClient;
+
 class FeedChannel {
 
     const SPEC_STRING_RE = '^[A-Za-z0-9]+(?:[A-Za-z0-9-\.\:]*[A-Za-z0-9])?$';
@@ -64,10 +68,10 @@ class FeedChannel {
     {
         $item->channel = $this->name;
         $pushed = $item->save();
-        return $pushed;
+        return $item;
     }
 
-    public function allowsClientTo(ApiClient $client, $level = self::ACL_LEVEL_READ)
+    public function allowsClientTo($userOrclient, $level = self::ACL_LEVEL_READ)
     {
         return $client->isAuthorized(static::aclTopic('*', $level))
             || $client->isAuthorized(static::aclTopic($this->name, $level));

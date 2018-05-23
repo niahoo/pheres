@@ -28,36 +28,47 @@
                 </div>
             @endif
 
+            <h1><small>/p/</small>{{ $channel->getName() }}</h1>
+
             <div class="card">
                 <div class="card-header">Bokmarklet</div>
                 <div class="card-body">
-                <div id="bookmarklet-app"></div>
-                <script src="{{ asset('js/domvm/dist/dev/domvm.dev.js') }}" defer></script>
-                <script defer>
-                    var bookmarkletAppData = {!! json_encode($bookmarkletWidgetData) !!};
+
+                {{--
+
+                  Bookmarklet works as the following to work around a CSP bug in
+                  Firefox :
+                  - Create a stylesheet with the hs code as a property for a selector
+                  - Create an element matching the selector
+                  - Select the element in the DOM and eval() its style property
+
+                  see https://stackoverflow.com/questions/7607605/does-content-security-policy-block-bookmarklets/25224109#25224109
+
+                --}}
+                <p>
+                    <a class="btn btn-primary" id="bookmarklet" href="">Push Page</a>
+                </p>
+                <script type="text/javascript">
+                  var runtime = function() {
+                    var sheet = document.createElement("link");
+                    sheet.rel = "stylesheet";
+                    sheet.href = '{{ route('bookmarkletScriptWithCssExt', $channel->getName()) }}?t='+(new Date).getTime();
+                    var span = document.createElement("span");
+                    span.id = "leit-inject";
+                    sheet.onload = function() {
+                        var family = span.currentStyle ? span.currentStyle.fontFamily : document.defaultView.getComputedStyle(span, null).fontFamily;
+                        eval(family.replace(/^["']|\\|["']$/g, ""));
+                    };
+                    document.body.appendChild(sheet);
+                    document.body.appendChild(span);
+                  }
+                  var href = "javascript:("+runtime.toString()+"());";
+                  document.getElementById('bookmarklet').href = href;
                 </script>
-                <script src="{{ asset('js/bookmarklet-app.js') }}" defer></script>
-
-<pre>
-@todo
-- List all api clients that can push to this channel
-- Show a warning that if the api client is modified
-  (loses the right to push to the channel, the
-  bookmarklet will not work no more).
-- Pré sélectionner le premier api client de la liste.
-  Par défaut, le premier est celui qui n'a pas le droit
-  en lecture, s'il existe.
-- Proposer de sélectionner un autre api client si
-  disponible.
-- Si aucun client existe, afficher une erreur et
-  indiquer qu'il faut en créer un, avec un lien vers le
-  dashboard.
-- Afficher un texte indiquant comment glisser le
-  bookmarklet.
-- à l'initialisation et lors du clic sur un api client,
-  render() le bookmarklet.
-
-</pre>
+                    <p>
+                        Drag this button to your bookmarks bar and you can use
+                        it on any web-page to push the page to the channel.
+                    </p>
                 </div>
             </div>
 

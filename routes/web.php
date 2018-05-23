@@ -13,7 +13,7 @@
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->middleware('guest');;
 
 Auth::routes();
 
@@ -24,3 +24,11 @@ Route::get('/p/{channel}/item/{id}', 'ChannelController@singleItem')
         ->name('singleItem');
 Route::get('/p/{channel}', 'ChannelController@index')
         ->name('channelIndex');
+Route::get('/p/{channel}/bm.js', 'ChannelController@bookmarkletScript')
+        ->name('bookmarkletScript');
+Route::get('/p/{channel}/bm.css', 'ChannelController@bookmarkletCssWrapper')
+        ->name('bookmarkletScriptWithCssExt');
+Route::get('/p/{channel}/push', 'ChannelController@userItemPush')
+        ->name('userItemPush');
+Route::get('/login-check.txt', 'Auth\LoginController@loginChekTxt')
+        ->name('loginChekTxt');
