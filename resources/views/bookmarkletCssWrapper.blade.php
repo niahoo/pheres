@@ -1,12 +1,10 @@
 #leit-inject {
-  {{-- display: none; --}}
   color: red;
   font-family: '{!! $js !!}' !important;
 }
 
 .leit-report {
   position: fixed;
-  display: none;
   top: 1em;
   right: 1em;
   widht: 300px;
