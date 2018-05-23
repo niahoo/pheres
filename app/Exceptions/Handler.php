@@ -5,6 +5,9 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Auth\AuthenticationException;
+use App\Providers\RouteServiceProvider;
+
 
 class Handler extends ExceptionHandler
 {
@@ -50,6 +53,15 @@ class Handler extends ExceptionHandler
         return parent::render($request, $exception);
     }
 
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+
+        $shouldDisplayJson = $request->expectsJson()
+                          || RouteServiceProvider::isApiRoute($request->route());
+        return $shouldDisplayJson
+                    ? response()->json(['message' => $exception->getMessage()], 401)
+                    : redirect()->guest(route('login'));
+    }
 
     /**
      * Convert the given exception to an array.

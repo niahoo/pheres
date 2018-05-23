@@ -71,7 +71,7 @@ class FeedChannel {
         return $item;
     }
 
-    public function allowsClientTo($userOrclient, $level = self::ACL_LEVEL_READ)
+    public function allowsClientTo(ApiClient $client, $level = self::ACL_LEVEL_READ)
     {
         return $client->isAuthorized(static::aclTopic('*', $level))
             || $client->isAuthorized(static::aclTopic($this->name, $level));
