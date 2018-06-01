@@ -18,7 +18,8 @@ Route::middleware('auth:api')->group(function(){
         return $request->user();
     });
     // /p/ : private channels
-    Route::get('/p/{channel}/{feed_format?}', 'ApiChannelController@list');
+    Route::get('/p/{channel}/{feed_format?}', 'ApiChannelController@list')
+    ->name('apiChannel');
     Route::post('/p/{channel}', 'ApiChannelController@push');
 });
 

@@ -72,6 +72,25 @@
                 </div>
             </div>
 
+            <br/>
+
+            <div class="card">
+                <div class="card-header">Feed URL</div>
+                {{--
+                    Mini app : pick a read client and a format
+                --}}
+                <div class="card-body">
+                    <div id="channel-url-pick-app"></div>
+                </div>
+            </div>
+            <script type="text/javascript" src="{{ asset('js/domvm/dist/dev/domvm.dev.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/channel-url-pick.js') }}"></script>
+            <script type="text/javascript">
+                window.channelUrlPick.init({!! json_encode([
+                    'readClients' => $clients['read']->values(),
+                    'channelUrl' => url()->route('apiChannel', $channel->getName()),
+                ], JSON_PRETTY_PRINT) !!})
+            </script>
         </div>
     </div>
 </div>
